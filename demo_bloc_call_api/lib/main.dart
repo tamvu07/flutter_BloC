@@ -53,7 +53,20 @@ class _PostsPageState extends State<PostsPage> {
     return PostsProvider(
       child: MaterialApp(
         home: Scaffold(
-          body: BlocBuilder<PostsBloc, PostsState> (builder: ((context, postsBloc){
+          body: BlocConsumer<PostsBloc, PostsState> (
+            listener: (context, state) {
+              // o day chi handle logic ko handle show UI dc nha
+              if (state is LoadingGetDataState) {
+                print("abc1.....: LoadingGetDataState");
+              }
+              if (state is SuccessGetDataState) {
+                print("abc1.....: SuccessGetDataState");
+              }
+              if (state is ErrorGetDataState) {
+                print("abc1.....: ErrorGetDataState");
+              }
+            },
+              builder: ((context, postsBloc){
             switch (postsBloc.runtimeType) {
               case LoadingGetDataState:
                 return const Center(
