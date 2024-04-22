@@ -1,7 +1,5 @@
 
-
-
-import 'package:demo_bloc_call_api/features/posts/posts_bloc.dart';
+import 'package:demo_bloc_call_api/features/post/posts/posts_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
