@@ -96,6 +96,7 @@ class _PostsPageState extends State<PostsPage> {
       ),
     );
 
+
     // return Scaffold(
     //   body: BlocConsumer<PostsBloc, PostsState>(
     //     bloc: postsBloc,
