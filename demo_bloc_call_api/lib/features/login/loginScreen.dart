@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:demo_bloc_call_api/features/login/auth/model_converter.dart';
 import 'package:demo_bloc_call_api/features/login/bloc/login_bloc.dart';
 import 'package:demo_bloc_call_api/features/login/bloc/login_event.dart';
@@ -19,6 +21,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return LoginProvider(
@@ -56,12 +62,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                 }
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 50),
+                    const SizedBox(height: 20),
                     _customButton(() => _actionBack(context), "Back"),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 10),
                     _customButton(() => _actionLogin(context), "Login"),
+                    const SizedBox(height: 10),
+                    _textUserName(context),
+                    const SizedBox(height: 10),
+                    _textPassword(context)
                   ],
                 );
               })),
@@ -78,6 +88,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _actionLogin(BuildContext context) {
-    context.read<LoginBloc>().add(StartLoginEvent());
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+    context.read<LoginBloc>().add(StartLoginEvent(username, password));
+  }
+
+  Widget _textUserName(BuildContext context) {
+    return TextField(
+      controller: _usernameController,
+      decoration: const InputDecoration(
+        labelText: 'Username',
+      ),
+    );
+  }
+
+  Widget _textPassword(BuildContext context) {
+    return TextField(
+      controller: _passwordController,
+      decoration: const InputDecoration(
+        labelText: 'Password',
+      ),
+    );
   }
 }

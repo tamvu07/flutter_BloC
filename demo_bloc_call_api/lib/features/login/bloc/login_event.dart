@@ -5,4 +5,9 @@ import 'package:flutter/cupertino.dart';
 abstract class LoginEvent {}
 
 
-class StartLoginEvent extends LoginEvent{}
+class StartLoginEvent extends LoginEvent{
+  final String username;
+  final String password;
+
+  StartLoginEvent(this.username,this.password);
+}

@@ -26,7 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   FutureOr<void> startLogin(
       StartLoginEvent event, Emitter<LoginState> emit) async {
 
-    final loginInPut = LoginInPutModel(username: "user@yahoo.com", password: "12345612", deviceToken: "", deviceType: 3);
+    final loginInPut = LoginInPutModel(username: event.username, password: event.password, deviceToken: "", deviceType: 3);
 
     emit(LoadingLoginState());
 
