@@ -1,9 +1,17 @@
+import 'dart:async';
+
 import 'package:demo_bloc_call_api/features/login/auth/model_converter.dart';
+import 'package:demo_bloc_call_api/features/login/bloc/login_bloc.dart';
+import 'package:demo_bloc_call_api/features/login/bloc/login_event.dart';
+import 'package:demo_bloc_call_api/features/login/bloc/login_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_bloc_call_api/features/login/auth/viewmodel/loginInPutModel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth/auth_service.dart';
 import 'package:demo_bloc_call_api/features/login/auth/viewmodel/LoginOutPutModel.dart';
+
+import 'bloc/login_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,20 +22,60 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  final AuthService authService = AuthService.create();
-  
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 50),
-          _customButton(() => _actionBack(context), "Back"),
-          SizedBox(height: 50),
-          _customButton(() => _actionLogin(context, authService), "Login"),
-        ],
-      ),
+    return LoginProvider(
+        child: Scaffold(
+          body: BlocConsumer<LoginBloc, LoginState>(
+              listener: (context, state) {
+
+              },
+              builder: ((context, loginBloc){
+                switch (loginBloc.runtimeType) {
+                  case LoadingLoginState:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case SuccessLoginState:
+                    return StreamBuilder<String>(
+                      stream: context.read<LoginBloc>().tokenStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var token = snapshot.data!;
+                          return Center (
+                            child: Text("Login Success with token: \n $token"),
+                          );
+                        } else {
+                          return const Center (
+                            child: Text("Login Success ...."),
+                          );
+                        }
+                      },
+                    );
+
+                  case ErrorLoginState:
+                    return const Center (
+                      child: Text("Login Error ...."),
+                    );
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    _customButton(() => _actionBack(context), "Back"),
+                    const SizedBox(height: 10),
+                    _customButton(() => _actionLogin(context), "Login"),
+                    const SizedBox(height: 10),
+                    _textUserName(context),
+                    const SizedBox(height: 10),
+                    _textPassword(context)
+                  ],
+                );
+              })),
+        ),
     );
   }
 
@@ -39,15 +87,27 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pop(context);
   }
 
-  Future<void> _actionLogin(BuildContext context, AuthService auth) async {
-    final loginInPut = LoginInPutModel(username: "user@yahoo.com", password: "12345612", deviceToken: "", deviceType: 3);
-    final response = await auth.login(loginInPut);
-    if (response.isSuccessful) {
-      final data = (response.body as Success).value as LoginOutPutModel;
-      var token = data.token;
-      print("a123 success nha token is : $token");
-    } else {
-      print("a123 error nha");      
-    }
+  _actionLogin(BuildContext context) {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+    context.read<LoginBloc>().add(StartLoginEvent(username, password));
+  }
+
+  Widget _textUserName(BuildContext context) {
+    return TextField(
+      controller: _usernameController,
+      decoration: const InputDecoration(
+        labelText: 'Username',
+      ),
+    );
+  }
+
+  Widget _textPassword(BuildContext context) {
+    return TextField(
+      controller: _passwordController,
+      decoration: const InputDecoration(
+        labelText: 'Password',
+      ),
+    );
   }
 }

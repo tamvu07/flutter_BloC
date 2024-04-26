@@ -10,3 +10,4 @@ class FetchDataEvent extends PostsEvent{}
 
 
 class AddDataEvent extends PostsEvent{}
+
