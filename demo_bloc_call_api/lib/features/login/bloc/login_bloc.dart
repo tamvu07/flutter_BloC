@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import '../auth/auth_service.dart';
+import '../auth/model_converter.dart';
+import '../auth/viewmodel/LoginOutPutModel.dart';
 import '../auth/viewmodel/loginInPutModel.dart';
 import 'login_event.dart';
 import 'login_state.dart';
@@ -26,7 +28,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     final response = await authService.login(loginInPut);
     if (response.isSuccessful) {
-      print("a123 success nha");
+      final data = (response.body as Success).value as LoginOutPutModel;
+      var token = data.token;
+      print("a123 success nha token is : $token");
       emit(SuccessLoginState());
     } else {
       print("a123 error nha");
