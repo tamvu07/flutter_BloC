@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
-import 'package:demo_bloc_call_api/features/posts/posts_event.dart';
-import 'package:demo_bloc_call_api/features/posts/posts_state.dart';
+import 'package:demo_bloc_call_api/features/post/posts/posts_event.dart';
+import 'package:demo_bloc_call_api/features/post/posts/posts_state.dart';
 
 import '../models/post_data_ui_model.dart';
 import '../repos/posts_repo.dart';
