@@ -34,9 +34,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: CircularProgressIndicator(),
                     );
                   case SuccessLoginState:
-                    return const Center (
-                      child: Text("Login Success ...."),
+                    return StreamBuilder<String>(
+                      stream: context.read<LoginBloc>().tokenStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var token = snapshot.data!;
+                          return Center (
+                            child: Text("Login Success with token: \n $token"),
+                          );
+                        } else {
+                          return const Center (
+                            child: Text("Login Success ...."),
+                          );
+                        }
+                      },
                     );
+
                   case ErrorLoginState:
                     return const Center (
                       child: Text("Login Error ...."),

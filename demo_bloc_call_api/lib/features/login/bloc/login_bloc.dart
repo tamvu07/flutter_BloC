@@ -15,6 +15,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final AuthService authService = AuthService.create();
 
+  final _tokenController = StreamController<String>();
+
+  Stream<String> get tokenStream => _tokenController.stream;
+
   LoginBloc() : super(InitLoginState()) {
     on<StartLoginEvent>(startLogin);
   }
@@ -30,6 +34,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (response.isSuccessful) {
       final data = (response.body as Success).value as LoginOutPutModel;
       var token = data.token;
+      _tokenController.add(token);
       print("a123 success nha token is : $token");
       emit(SuccessLoginState());
     } else {
