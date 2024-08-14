@@ -17,7 +17,7 @@ final chopper = ChopperClient(
   void getInfo() async {
     emit(const ThetaLoading());
     final thetaService = chopper.getService<ThetaService>();
-    var response = await thetaService.thetaInfo();
-    emit(ThetaLoaded(response.body.toString()));
+    // var response = await thetaService.thetaInfo();
+    // emit(ThetaLoaded(response.body.toString()));
   }
 }
