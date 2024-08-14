@@ -18,12 +18,14 @@ final class _$ThetaService extends ThetaService {
   final Type definitionType = ThetaService;
 
   @override
-  Future<Response<dynamic>> thetaInfo() {
-    final Uri $url = Uri.parse('/osc/info');
+  Future<Response<dynamic>> login(dynamic Login) {
+    final Uri $url = Uri.parse('authen/v1/api/auth/client');
+    final $body = Login;
     final Request $request = Request(
       'GET',
       $url,
       client.baseUrl,
+      body: $body,
     );
     return client.send<dynamic, dynamic>($request);
   }

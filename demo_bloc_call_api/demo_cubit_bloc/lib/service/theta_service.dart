@@ -3,12 +3,12 @@ import 'package:chopper/chopper.dart';
 
 part 'theta_service.chopper.dart';
 
-@ChopperApi(baseUrl: '/osc')
+@ChopperApi()
 abstract class ThetaService extends ChopperService {
   @Get(
-    path: '/fact',
+    path: 'authen/v1/api/auth/client',
   )
-  Future<Response> thetaInfo();
+  Future<Response> login(@body() Login);
 
   static ThetaService create() {
     return _$ThetaService();
