@@ -12,7 +12,7 @@ class ThetaCubit extends Cubit<ThetaState> {
 final chopper = ChopperClient(
   baseUrl: Uri.parse('https://api.onskycloud.com'),
   services: [ThetaService.create()],
-  converter:  ModelConverter(),
+  converter:  ModelConverter(modelType: ModelsResponseType.login),
 );
 
   ThetaCubit() : super(const ThetaInitial("camera response"));

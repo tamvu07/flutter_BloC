@@ -3,8 +3,17 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:demo_cubit_bloc/model/loginOutPutModel.dart';
 
+enum ModelsResponseType {
+  login,
+  services,
+  timezone,
+  devices,
+}
 
 class ModelConverter implements Converter {
+  final ModelsResponseType modelType;
+
+  ModelConverter({required this.modelType});
 
   @override
   Request convertRequest(Request request) {
@@ -17,10 +26,9 @@ class ModelConverter implements Converter {
     return encodeJson(req);
   }
 
- Request encodeJson(Request request) {
-    
+  Request encodeJson(Request request) {
     final contentType = request.headers[contentTypeKey];
-    
+
     if (contentType != null && contentType.contains(jsonHeaders)) {
       return request.copyWith(body: json.encode(request.body));
     }
@@ -50,21 +58,25 @@ class ModelConverter implements Converter {
       }
 
       if (mapData['error'] != null) {
-      return response.copyWith<BodyType>(
-        body: ErrorTemp(APIException(mapData['error'])) as BodyType,
-      );
-    }
+        return response.copyWith<BodyType>(
+          body: ErrorTemp(APIException(mapData['error'])) as BodyType,
+        );
+      }
 
-    if (response.statusCode >= 400) {
-      return response.copyWith<BodyType>(
-        body: ErrorTemp(APIException('HTTP ${response.statusCode}')) as BodyType,
-      );
-    }
-      // 4
-      final auth = LoginOutPutModel.fromJson(mapData);
-
-      // 5
-      return response.copyWith<BodyType>(body: Success(auth) as BodyType);
+      if (response.statusCode >= 400) {
+        return response.copyWith<BodyType>(
+          body: ErrorTemp(APIException('HTTP ${response.statusCode}'))
+              as BodyType,
+        );
+      }
+      switch (modelType) {
+        case ModelsResponseType.login:
+            final auth = LoginOutPutModel.fromJson(mapData);
+            return response.copyWith<BodyType>(body: Success(auth) as BodyType);
+        default:
+          final auth = LoginOutPutModel.fromJson(mapData);
+            return response.copyWith<BodyType>(body: Success(auth) as BodyType);
+      }
     } catch (e) {
       // 6
       chopperLogger.warning(e);
@@ -75,6 +87,7 @@ class ModelConverter implements Converter {
 }
 
 abstract class Result<T> {}
+
 class Success<T> extends Result<T> {
   final T value;
 
