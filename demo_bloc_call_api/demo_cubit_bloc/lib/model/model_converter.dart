@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
+import 'package:demo_cubit_bloc/SharedPreferences/SaveToken.dart';
 import 'package:demo_cubit_bloc/model/loginOutPutModel.dart';
 
 enum ModelsResponseType {
@@ -8,21 +9,41 @@ enum ModelsResponseType {
   services,
   timezone,
   devices,
+  urgencySetting,
 }
+
+
 
 class ModelConverter implements Converter {
   final ModelsResponseType modelType;
-
   ModelConverter({required this.modelType});
 
   @override
-  Request convertRequest(Request request) {
+  Future<Request> convertRequest(Request request) async {
+    final authToken = await SaveToken.getToken();
+    print("a2.......authToken......is: $authToken..");
+
     final req = applyHeader(
       request,
       contentTypeKey,
       jsonHeaders,
       override: false,
     );
+
+    switch (modelType) {
+      case ModelsResponseType.login:
+        return encodeJson(req);
+      case ModelsResponseType.urgencySetting:
+        return applyHeader(
+        req,
+        'Authorization',
+        'Bearer $authToken',
+        override: false,
+      );
+      default:
+        return encodeJson(req);
+    }
+
     return encodeJson(req);
   }
 
@@ -71,11 +92,19 @@ class ModelConverter implements Converter {
       }
       switch (modelType) {
         case ModelsResponseType.login:
-            final auth = LoginOutPutModel.fromJson(mapData);
-            return response.copyWith<BodyType>(body: Success(auth) as BodyType);
-        default:
           final auth = LoginOutPutModel.fromJson(mapData);
-            return response.copyWith<BodyType>(body: Success(auth) as BodyType);
+          print("a2.......login........");
+          return response.copyWith<BodyType>(body: Success(auth) as BodyType);
+
+        case ModelsResponseType.urgencySetting:
+          print("a2.......ModelsResponseType.urgencySetting........");
+          return response.copyWith<BodyType>(
+              body: Success(mapData) as BodyType);
+
+        default:
+          print("a2.......222........");
+          final auth = LoginOutPutModel.fromJson(mapData);
+          return response.copyWith<BodyType>(body: Success(auth) as BodyType);
       }
     } catch (e) {
       // 6

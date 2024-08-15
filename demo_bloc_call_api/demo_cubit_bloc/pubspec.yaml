@@ -39,6 +39,7 @@ dependencies:
   equatable: ^2.0.5
   chopper: ^8.0.1+1
   json_annotation: ^4.9.0
+  shared_preferences: ^2.3.1
 
 dev_dependencies:
   flutter_test:

@@ -40,6 +40,9 @@ class MyApp extends StatelessWidget {
                           ElevatedButton(child: const Text('info'), onPressed: () {
                             context.read<ThetaCubit>().getInfo();
                           }),
+                          ElevatedButton(child: const Text('UrgencySetting'), onPressed: () {
+                            context.read<ThetaCubit>().getUrgencySetting();
+                          }),
                         ],
                       ))
                     ],
