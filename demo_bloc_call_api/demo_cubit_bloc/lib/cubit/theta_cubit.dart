@@ -4,7 +4,6 @@ import 'package:demo_cubit_bloc/SharedPreferences/SaveToken.dart';
 import 'package:demo_cubit_bloc/model/loginInPutModel.dart';
 import 'package:demo_cubit_bloc/model/loginOutPutModel.dart';
 import 'package:demo_cubit_bloc/model/model_converter.dart';
-import 'package:demo_cubit_bloc/model/model_token_converter.dart';
 import 'package:demo_cubit_bloc/service/theta_service.dart';
 import 'package:equatable/equatable.dart';
 
@@ -21,7 +20,7 @@ final chopper = ChopperClient(
 final chopperToken = ChopperClient(
   baseUrl: Uri.parse('https://api.onskycloud.com'),
   services: [ThetaService.create()],
-  converter:  ModelTokenConverter(),
+  converter:  ModelConverter(modelType: ModelsResponseType.urgencySetting, ),
 );
 
   ThetaCubit() : super(const ThetaInitial("camera response"));
@@ -46,8 +45,6 @@ final chopperToken = ChopperClient(
   void getUrgencySetting() async {
     emit(const ThetaLoading());
     final thetaService = chopperToken.getService<ThetaService>();
-    final authToken = await SaveToken.getToken();
-    
     var response = await thetaService.urgencySetting();
     
     emit(ThetaLoaded(response.body.toString()));

@@ -29,21 +29,6 @@ class ModelConverter implements Converter {
       jsonHeaders,
       override: false,
     );
-
-    switch (modelType) {
-      case ModelsResponseType.login:
-        return encodeJson(req);
-      case ModelsResponseType.urgencySetting:
-        return applyHeader(
-        req,
-        'Authorization',
-        'Bearer $authToken',
-        override: false,
-      );
-      default:
-        return encodeJson(req);
-    }
-
     return encodeJson(req);
   }
 
