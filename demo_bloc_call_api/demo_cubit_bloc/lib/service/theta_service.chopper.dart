@@ -31,8 +31,8 @@ final class _$ThetaService extends ThetaService {
   }
 
   @override
-  Future<Response<dynamic>> urgencySetting() async {
-    final authToken = await SaveToken.getToken();
+  Future<Response<dynamic>> urgencySetting()async {
+     final authToken = await SaveToken.getToken();
     final Uri $url = Uri.parse(
         'iot-service/v1/api/things/thing/84:86:f3:00:29:0b?is_simple=true');
     final Request $request = Request(

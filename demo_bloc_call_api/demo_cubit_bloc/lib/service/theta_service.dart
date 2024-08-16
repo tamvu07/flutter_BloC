@@ -9,6 +9,7 @@ part 'theta_service.chopper.dart';
 
 @ChopperApi()
 abstract class ThetaService extends ChopperService  {
+
   @Post(
     path: 'authen/v1/api/auth/client',
   )
@@ -19,9 +20,32 @@ abstract class ThetaService extends ChopperService  {
     )
   Future<Response<dynamic>> urgencySetting();
 
-  static ThetaService create() {
-    return _$ThetaService();
-  }
+  static ThetaService create(ModelsResponseType modelServiceType) {
+    final client = ChopperClient(
 
+      baseUrl: Uri.tryParse('https://api.onskycloud.com'),
+      
+      converter: ModelConverter(modelType: modelServiceType),
+
+      services: [
+        _$ThetaService(),
+      ],
+    );
+    return _$ThetaService(client);
+  }
 }
 
+
+// @override
+//   Future<Response<dynamic>> urgencySetting() async {
+//     final authToken = await SaveToken.getToken();
+//     final Uri $url = Uri.parse(
+//         'iot-service/v1/api/things/thing/84:86:f3:00:29:0b?is_simple=true');
+//     final Request $request = Request(
+//       'GET',
+//       $url,
+//       client.baseUrl,
+//        headers: {'Authorization': 'Bearer $authToken'},
+//     );
+//     return client.send<dynamic, dynamic>($request);
+//   }

@@ -20,8 +20,7 @@ class ModelConverter implements Converter {
 
   @override
   Future<Request> convertRequest(Request request) async {
-    final authToken = await SaveToken.getToken();
-    print("a2.......authToken......is: $authToken..");
+    // final authToken = await SaveToken.getToken();
 
     final req = applyHeader(
       request,
@@ -82,12 +81,11 @@ class ModelConverter implements Converter {
           return response.copyWith<BodyType>(body: Success(auth) as BodyType);
 
         case ModelsResponseType.urgencySetting:
-          print("a2.......ModelsResponseType.urgencySetting........");
+          print("a2........urgencySetting........");
           return response.copyWith<BodyType>(
               body: Success(mapData) as BodyType);
 
         default:
-          print("a2.......222........");
           final auth = LoginOutPutModel.fromJson(mapData);
           return response.copyWith<BodyType>(body: Success(auth) as BodyType);
       }

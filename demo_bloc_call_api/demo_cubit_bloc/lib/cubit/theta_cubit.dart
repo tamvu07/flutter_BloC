@@ -11,25 +11,15 @@ part 'theta_state.dart';
 
 class ThetaCubit extends Cubit<ThetaState> {
 
-final chopper = ChopperClient(
-  baseUrl: Uri.parse('https://api.onskycloud.com'),
-  services: [ThetaService.create()],
-  converter:  ModelConverter(modelType: ModelsResponseType.login, ),
-);
-
-final chopperToken = ChopperClient(
-  baseUrl: Uri.parse('https://api.onskycloud.com'),
-  services: [ThetaService.create()],
-  converter:  ModelConverter(modelType: ModelsResponseType.urgencySetting, ),
-);
+// final service = ThetaService.create(ModelsResponseType.login);
 
   ThetaCubit() : super(const ThetaInitial("camera response"));
 
   void getInfo() async {
     emit(const ThetaLoading());
-    final thetaService = chopper.getService<ThetaService>();
+    final service = ThetaService.create(ModelsResponseType.login);
     final loginInPut = LoginInPutModel("user@yahoo.com", "12345612", 3, "");
-    var response = await thetaService.login(loginInPut);
+    var response = await service.login(loginInPut);
     if (response.isSuccessful) {
       
       final data = (response.body as Success).value as LoginOutPutModel;
@@ -44,8 +34,8 @@ final chopperToken = ChopperClient(
 
   void getUrgencySetting() async {
     emit(const ThetaLoading());
-    final thetaService = chopperToken.getService<ThetaService>();
-    var response = await thetaService.urgencySetting();
+    final service = ThetaService.create(ModelsResponseType.urgencySetting);
+    var response = await service.urgencySetting();
     
     emit(ThetaLoaded(response.body.toString()));
   }
