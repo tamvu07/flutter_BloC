@@ -31,18 +31,12 @@ class MQTTManager<T extends MqttClient> {
       client.port = 8883;
       (client as MqttServerClient).secure = true;
       final context = SecurityContext.defaultContext;
-      // Note if you get a 'TlsException: Failure trusting builtin roots (OS Error:
-      //  CERT_ALREADY_IN_HASH_TABLE' error here comment out the following 2 lines
-      // final crtFile = currDir + path.join('pem', 'ca.crt');
       final ByteData crtData = await rootBundle.load('assets/ca.crt');
-      // Convert ByteData to Uint8List
       final Uint8List crtBytes = crtData.buffer.asUint8List();
       context.setTrustedCertificatesBytes(crtBytes);
       (client as MqttServerClient)?.securityContext = context;
       (client as MqttServerClient).onBadCertificate = (Object a) => true;
       // la mobile
-
-
     client.setProtocolV311();
 
     client.keepAlivePeriod = 20;
@@ -58,12 +52,8 @@ class MQTTManager<T extends MqttClient> {
 
     client.websocketProtocols = MqttClientConstants.protocolsMultipleDefault;
 
-    const tokenAdmin =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjIjoxNTcxLCJjX24iOiIzMzg5MzU4OTU5MjM1MTcxODcyIiwiZXhwIjoyOTcwODUzMzUxLCJpZCI6MTYxOSwiciI6NSwidSI6ImFkbWluX3dzc0BnbWFpbC5jb20iLCJ1X3VpZCI6ImMzN2Y3ZjIwLTg3OWQtNDJlNi1iZTczLTRlZGJhYmMxODY2OCJ9.DfIKv2sSI1H6_OqEPL_R6t6S-P9Zwn8QovQpwSR-gg4';
-
     final connMess = MqttConnectMessage()
         .withClientIdentifier(_identifier)
-        .authenticateAs("admin_wss@gmail.com", "Bearer $tokenAdmin")
         .withWillTopic(
             'willtopic') // If you set this you must set a will message
         .withWillMessage('My Will message')
@@ -90,7 +80,10 @@ class MQTTManager<T extends MqttClient> {
   }
 
   void onConnected() {
-    print("a2.............MQtt connect nha..................");
+    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+        subscribe("things/84:86:f3:00:29:0b/realtime_response");
+    }
+    handleResponseByMQTT();
   }
 
   void onSubscribed(String topic) {
@@ -105,5 +98,21 @@ class MQTTManager<T extends MqttClient> {
 
   void disconnect() {
     client.disconnect();
+  }
+
+  void subscribe(String topic) async {
+    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+      print("a2.............subscribe topic is: $topic..................");
+      client.subscribe(topic, MqttQos.atMostOnce);
+    }
+  }
+
+  void handleResponseByMQTT() {
+    client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+      final recMess = c![0].payload as MqttPublishMessage;
+      final pt =
+            MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+        print('a2......handleResponseByMQTT.......${recMess.variableHeader!.topicName}....... $pt...............');
+    });
   }
 }
