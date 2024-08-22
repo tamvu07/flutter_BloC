@@ -1,5 +1,6 @@
 import 'package:bloc_art_ct_aris/common/utils/context+extensions.dart';
 import 'package:bloc_art_ct_aris/login/bloc/login_bloc.dart';
+import 'package:bloc_art_ct_aris/login/services/login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (context) => LoginBloc(),
+        create: (context) => LoginBloc(loginService: LoginService()),
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
             return Scaffold(
