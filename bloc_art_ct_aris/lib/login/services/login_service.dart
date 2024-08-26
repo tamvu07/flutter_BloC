@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 
 class LoginService {
 
-  Future<Result<LoginData?>> login(String username, String password, int deviceType,
+  Future<Result<LoginOutPutModel?>> login(String username, String password, int deviceType,
       String deviceToken) async {
     try {
       var param = FormData.fromMap({
@@ -17,23 +17,12 @@ class LoginService {
         'device_type': deviceType,
         'device_token': deviceToken
       });
-
       var client = await AppClient.getInstance();
       var response = await client.post(Constants.login, data: param);
-
       if (response.statusCode == 200) {
-        var loginResponse = LoginResponse.fromJson(response.data);
-        if (loginResponse.code == 0) {
-          print('a2...........loginResponse.data?.token is:${loginResponse.data?.token}');
-          return Result.success(data: loginResponse.data!);
-        } else {
-          // Login failed
-          print('a2..............loginResponse.message is:${loginResponse.message}');
-          return Result.failure(error: AppError(APIException(loginResponse.code!, loginResponse.message!)));
-        }
+        var loginResponse = LoginOutPutModel.fromJson(response.data);
+          return Result.success(data: loginResponse);
       } else {
-        // Handle error
-        print('a2.........Error: ${response.statusCode} - ${response.data}');
         return Result.failure(error: AppError(APIException(response.statusCode!, 'loi chua xac dinh nha')));
       }
     } on Exception catch (e) {
@@ -41,5 +30,3 @@ class LoginService {
     }
   }
 }
-
-loi chua call dc nha

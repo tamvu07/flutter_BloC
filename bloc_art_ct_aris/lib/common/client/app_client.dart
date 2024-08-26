@@ -25,7 +25,7 @@ class AppClient with DioMixin implements Dio {
       interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     }
 
-    httpClientAdapter = IOHttpClientAdapter();
+    httpClientAdapter = HttpClientAdapter();
   }
 
   static Future<Dio> getInstance() async {
