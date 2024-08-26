@@ -21,7 +21,7 @@ final LoginService _service;
       StartLoginEvent event,
       Emitter<LoginState> emit,
     ) async {
-      emit(LoginState.loading());
+      emit(const LoginState.loading());
       await _service.login(event.username, event.password, 3, "").then((value) => {
         value.when(
           success: (data) => {
