@@ -75,7 +75,8 @@ class _LoginButtonState extends State<LoginButton> {
           context.showLoadingDialog();
         case LoginStatus.success:
           context.dismissDialog();
-          context.showErrorDialog("Thanh cong nha");
+          var token = loginState.data?.token;
+          context.showErrorDialog("Thanh cong nha token la: \n $token");
           break;
         case LoginStatus.failure:
           context.dismissDialog();
