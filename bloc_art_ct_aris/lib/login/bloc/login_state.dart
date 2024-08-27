@@ -5,9 +5,9 @@ enum LoginStatus { initial, loading, success, failure }
 // @immutable
 // sealed class LoginState {}
 
-final class LoginState extends Equatable {
+final class LoginState<T> extends Equatable {
   final LoginStatus status;
-  final LoginOutPutModel? data;
+  final T? data;
   final AppError? error;
   
   @override
@@ -22,6 +22,6 @@ final class LoginState extends Equatable {
 
   const LoginState.initial(): this._();
   const LoginState.loading(): this._(status: LoginStatus.loading);
-  const LoginState.success(LoginOutPutModel data): this._(status: LoginStatus.success, data: data);
+  const LoginState.success(T data): this._(status: LoginStatus.success, data: data);
   const LoginState.error(AppError error): this._(status: LoginStatus.failure, error: error);
 }

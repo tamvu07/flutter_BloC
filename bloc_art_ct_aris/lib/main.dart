@@ -1,3 +1,4 @@
+import 'package:bloc_art_ct_aris/urgency/screen/urgency_page.dart';
 import 'package:bloc_art_ct_aris/common/utils/context+extensions.dart';
 import 'package:bloc_art_ct_aris/login/bloc/login_bloc.dart';
 import 'package:bloc_art_ct_aris/login/services/login_service.dart';
@@ -30,11 +31,14 @@ class MyApp extends StatelessWidget {
                 child: Column(
                   children: [
                     Expanded(flex: 4, child: Container()),
-                    const Expanded(
+                    Expanded(
                         flex: 4,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [LoginButton()],
+                          children: [
+                            const LoginButton(),
+                            btUrgency(context)
+                            ],
                         ))
                   ],
                 ),
@@ -44,6 +48,17 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget btUrgency(BuildContext context) {
+    return ElevatedButton(
+        child: const Text('Urgency'),
+        onPressed: () {
+          Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const UrgencyPage()),
+    );
+        });
   }
 }
 
@@ -56,7 +71,7 @@ class LoginButton extends StatefulWidget {
 
 class _LoginButtonState extends State<LoginButton> {
   Future<void> actionLogin(BuildContext context) async {
-    var username = "user@yahoo.com";
+    var username = "t@yahoo.com";
     var password = "12345612";
 
     BlocProvider.of<LoginBloc>(context)

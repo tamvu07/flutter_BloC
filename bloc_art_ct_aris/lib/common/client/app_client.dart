@@ -1,8 +1,10 @@
 
+import 'package:bloc_art_ct_aris/SharedPreferences/SaveToken.dart';
 import 'package:bloc_art_ct_aris/common/client/api_paths.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppClient with DioMixin implements Dio {
 
@@ -15,9 +17,10 @@ class AppClient with DioMixin implements Dio {
       receiveTimeout: const Duration(seconds: 30),
     );
 
-    // var sharedPrefs = await SharedPreferences.getInstance();
-    // options.headers['Authorization'] =
-    //     'Bearer ${sharedPrefs.getString('token')}';
+    var sharedPrefs = await SharedPreferences.getInstance();
+    final authToken = await SaveToken.getToken();
+    options.headers['Authorization'] =
+        'Bearer $authToken';
 
     this.options = options;
 
