@@ -7,7 +7,7 @@ import 'package:bloc_art_ct_aris/urgency/models/urgencyOutPutModel/urgencyOutPut
 
 class UrgencyService {
 
-  Future<Result<UrgencyOutPutModel?>> getUrcency() async {
+  Future<Result<UrgencyOutPutModel?>> getUrgency() async {
     try {
       var client = await AppClient.getInstance();
       var response = await client.get(Constants.urgencyService);

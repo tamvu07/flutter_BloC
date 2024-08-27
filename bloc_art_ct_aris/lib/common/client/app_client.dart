@@ -16,8 +16,6 @@ class AppClient with DioMixin implements Dio {
       sendTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
     );
-
-    var sharedPrefs = await SharedPreferences.getInstance();
     final authToken = await SaveToken.getToken();
     options.headers['Authorization'] =
         'Bearer $authToken';

@@ -20,7 +20,9 @@ class UrgencyBloc extends Bloc<UrgencyEvent, LoginState> {
       Emitter<LoginState> emit,
     ) async {
          emit(const LoginState.loading());
-         await _service.getUrcency().then((value) => {
+         // then((value) => {} đây là cơ chế của hàm future<> trong flutter
+         await _service.getUrgency().then((value) => {
+          //  value.when() la của freezed
         value.when(
           success: (data) => {
             emit(LoginState.success(data!))
